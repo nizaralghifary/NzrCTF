@@ -9,17 +9,59 @@ export default function LoginPage() {
   const router = useRouter()
   const supabase = createClient()
 
-  const [email, setEmail] = useState("")
+  // const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [emailOrUsername, setEmailOrUsername] = useState("")
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError("")
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    let loginEmail = emailOrUsername
+
+    const isEmail = emailOrUsername.includes("@")
+
+    if (!isEmail) {
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("username", emailOrUsername.trim())
+        .single()
+
+      if (profileError) {
+        setError("An error occurred, please try again later")
+        setLoading(false)
+        return
+      }
+
+      if (!profile) {
+        setError("Username not found")
+        setLoading(false)
+        return
+      }
+
+      const { data: profileWithEmail } = await supabase
+        .from("profiles")
+        .select("email")
+        .eq("username", emailOrUsername.trim())
+        .single()
+
+      if (!profileWithEmail?.email) {
+        setError("Username not found")
+        setLoading(false)
+        return
+      }
+
+      loginEmail = profileWithEmail.email
+    }
+
+    const { error } = await supabase.auth.signInWithPassword({ 
+      email: loginEmail, 
+      password 
+    })
 
     if (error) {
       setError(error.message)
@@ -37,7 +79,7 @@ export default function LoginPage() {
 
         <div className="text-center mb-8">
           <h1 className="text-2xl font-black text-[#00ff88] tracking-tight font-mono">
-            NzrCTF<span className="text-white">Lab</span>
+            NzrCTF<span className="text-white"> Lab</span>
           </h1>
           <p className="text-[#555570] text-xs mt-1 font-mono">
             CTF Challenge Platform
@@ -51,14 +93,14 @@ export default function LoginPage() {
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block text-[#555570] text-xs font-mono uppercase tracking-widest mb-1.5">
-                Email
+                Email or Username
               </label>
               <input
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={emailOrUsername}
+                onChange={(e) => setEmailOrUsername(e.target.value)}
                 required
-                placeholder="hacker@ctf.com"
+                placeholder="hacker@ctf.com or h4ck3r_name"
                 className="w-full bg-[#0a0a0f] border border-[#1e1e2e] text-white font-mono text-sm px-3 py-2.5 rounded focus:outline-none focus:border-[#00ff88] focus:ring-1 focus:ring-[#00ff88]/20 transition-all placeholder:text-[#333350]"
               />
             </div>

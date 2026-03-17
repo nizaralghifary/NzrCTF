@@ -44,7 +44,6 @@ export default function RegisterPage() {
       return
     }
 
-    // supabase auth handle auto hashing password
     const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -70,6 +69,7 @@ export default function RegisterPage() {
       .insert({
         id: data.user.id,
         username: username.trim(),
+        email: email
       })
 
     if (profileError) {
@@ -88,7 +88,7 @@ export default function RegisterPage() {
 
         <div className="text-center mb-8">
           <h1 className="text-2xl font-black text-[#00ff88] tracking-tight font-mono">
-            NzrCTF<span className="text-white">Lab</span>
+            NzrCTF<span className="text-white"> Lab</span>
           </h1>
           <p className="text-[#555570] text-xs mt-1 font-mono">
             CTF Challenge Platform
@@ -137,7 +137,7 @@ export default function RegisterPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                placeholder="min. 6 karakter"
+                placeholder="min. 6 characters"
                 className="w-full bg-[#0a0a0f] border border-[#1e1e2e] text-white font-mono text-sm px-3 py-2.5 rounded focus:outline-none focus:border-[#00ff88] focus:ring-1 focus:ring-[#00ff88]/20 transition-all placeholder:text-[#333350]"
               />
             </div>

@@ -61,14 +61,13 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white">
 
-      {/* Navbar */}
       <nav className="border-b border-[#1e1e2e] bg-[#0a0a0f]/95 sticky top-0 z-10 px-6 py-3 flex items-center justify-between">
         <span className="text-[#00ff88] font-black font-mono text-lg tracking-tight">
-          CTF<span className="text-white">Lab</span>
+          NzrCTF<span className="text-white"> Lab</span>
         </span>
         <div className="flex items-center gap-4">
           <span className="text-[#555570] font-mono text-xs">
-            👤 {profile?.username ?? user.email}
+            {profile?.username ?? user.email}
           </span>
           <span className="text-[#00ff88] font-mono text-xs font-bold">
             {totalPoints} pts
@@ -82,11 +81,9 @@ export default async function DashboardPage() {
       </nav>
 
       <main className="max-w-4xl mx-auto px-6 py-10">
-
-        {/* Header */}
         <div className="mb-8">
-          <p className="text-[#555570] font-mono text-xs tracking-widest uppercase mb-1">
-            // Welcome back
+          <p className="text-[#555570] font-mono text-xs tracking-widest mb-1">
+            Welcome Back,
           </p>
           <h1 className="text-2xl font-black">
             {profile?.username ?? "Hacker"} 👾
@@ -107,10 +104,9 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Challenge List */}
         <div>
-          <p className="text-[#555570] font-mono text-xs tracking-widest uppercase mb-4">
-            // Challenges
+          <p className="text-[#555570] font-mono text-xs tracking-widest mb-4">
+            Challenges
           </p>
           <div className="grid gap-3">
             {challenges?.map((challenge) => {
@@ -161,7 +157,7 @@ export default async function DashboardPage() {
                         rel="noopener noreferrer"
                         className="bg-[#00ff88] text-black text-xs font-bold px-3 py-1.5 rounded hover:opacity-90 transition-opacity"
                       >
-                        OPEN →
+                        OPEN
                       </a>
                     )}
                   </div>
