@@ -9,58 +9,37 @@ export default function LoginPage() {
   const router = useRouter()
   const supabase = createClient()
 
-  // const [email, setEmail] = useState("")
+  const [emailOrUsername, setEmailOrUsername] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
-  const [emailOrUsername, setEmailOrUsername] = useState("")
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError("")
 
-    let loginEmail = emailOrUsername
+    let loginEmail = emailOrUsername.trim()
 
-    const isEmail = emailOrUsername.includes("@")
-
-    if (!isEmail) {
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("id")
-        .eq("username", emailOrUsername.trim())
-        .single()
-
-      if (profileError) {
-        setError("An error occurred, please try again later")
-        setLoading(false)
-        return
-      }
-
-      if (!profile) {
-        setError("Username not found")
-        setLoading(false)
-        return
-      }
-
-      const { data: profileWithEmail } = await supabase
+    if (!loginEmail.includes("@")) {
+      const { data: profile } = await supabase
         .from("profiles")
         .select("email")
-        .eq("username", emailOrUsername.trim())
+        .eq("username", loginEmail)
         .single()
 
-      if (!profileWithEmail?.email) {
+      if (!profile?.email) {
         setError("Username not found")
         setLoading(false)
         return
       }
 
-      loginEmail = profileWithEmail.email
+      loginEmail = profile.email
     }
 
-    const { error } = await supabase.auth.signInWithPassword({ 
-      email: loginEmail, 
-      password 
+    const { error } = await supabase.auth.signInWithPassword({
+      email: loginEmail,
+      password,
     })
 
     if (error) {
@@ -69,7 +48,7 @@ export default function LoginPage() {
       return
     }
 
-    router.push("/dashboard")
+    router.push("/lab")
     router.refresh()
   }
 
@@ -96,7 +75,7 @@ export default function LoginPage() {
                 Email or Username
               </label>
               <input
-                type="email"
+                type="text"
                 value={emailOrUsername}
                 onChange={(e) => setEmailOrUsername(e.target.value)}
                 required

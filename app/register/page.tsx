@@ -69,7 +69,7 @@ export default function RegisterPage() {
       .insert({
         id: data.user.id,
         username: username.trim(),
-        email: email
+        email: email,
       })
 
     if (profileError) {
@@ -78,7 +78,7 @@ export default function RegisterPage() {
       return
     }
 
-    router.push("/dashboard")
+    router.push("/lab")
     router.refresh()
   }
 

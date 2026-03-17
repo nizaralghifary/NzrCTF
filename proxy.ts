@@ -33,14 +33,14 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname.startsWith("/login") ||
     request.nextUrl.pathname.startsWith("/register")
 
-  const isProtectedRoute = request.nextUrl.pathname.startsWith("/dashboard")
+  const isProtectedRoute = request.nextUrl.pathname.startsWith("/lab")
 
   if (!user && isProtectedRoute) {
     return NextResponse.redirect(new URL("/login", request.url))
   }
 
   if (user && isAuthRoute) {
-    return NextResponse.redirect(new URL("/dashboard", request.url))
+    return NextResponse.redirect(new URL("/lab", request.url))
   }
 
   return supabaseResponse
