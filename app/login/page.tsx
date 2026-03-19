@@ -22,19 +22,16 @@ export default function Login() {
     let loginEmail = emailOrUsername.trim()
 
     if (!loginEmail.includes("@")) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("email")
-        .eq("username", loginEmail)
-        .single()
+      const { data, error } = await supabase
+        .rpc("get_email_by_username", { p_username: loginEmail })
 
-      if (!profile?.email) {
+      if (!data) {
         setError("Username not found")
         setLoading(false)
         return
       }
 
-      loginEmail = profile.email
+      loginEmail = data
     }
 
     const { error } = await supabase.auth.signInWithPassword({
