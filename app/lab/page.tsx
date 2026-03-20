@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
+import { logout } from "@/lib/actions/auth"
 import { User, Trophy, Database, Code2, ShieldOff, Globe, ChevronRight } from "lucide-react"
+import ProgressBar from "@/components/progress-bar"
 
 const chapterConfig = [
   {
@@ -11,6 +13,7 @@ const chapterConfig = [
     description: "Bypass login panels, extract database contents, and exploit poorly sanitized queries.",
     icon: Database,
     color: "text-[#ff3c6e]",
+    hex: "#ff3c6e",
     border: "border-[#ff3c6e]/40",
     glow: "hover:shadow-[0_0_16px_rgba(255,60,110,0.15)]",
   },
@@ -21,6 +24,7 @@ const chapterConfig = [
     description: "Inject malicious scripts, steal cookies, and hijack user sessions.",
     icon: Code2,
     color: "text-[#ffd700]",
+    hex: "#ffd700",
     border: "border-[#ffd700]/40",
     glow: "hover:shadow-[0_0_16px_rgba(255,215,0,0.15)]",
   },
@@ -31,6 +35,7 @@ const chapterConfig = [
     description: "Access resources you shouldn't, manipulate object references, and escalate privileges.",
     icon: ShieldOff,
     color: "text-[#00bfff]",
+    hex: "#00bfff",
     border: "border-[#00bfff]/40",
     glow: "hover:shadow-[0_0_16px_rgba(0,191,255,0.15)]",
   },
@@ -41,6 +46,7 @@ const chapterConfig = [
     description: "Reach internal services, read sensitive files, and exploit XML parsers.",
     icon: Globe,
     color: "text-[#bf5fff]",
+    hex: "#bf5fff",
     border: "border-[#bf5fff]/40",
     glow: "hover:shadow-[0_0_16px_rgba(191,95,255,0.15)]",
   },
@@ -79,15 +85,6 @@ export default async function Lab() {
     challenges
       ?.filter((c) => solvedIds.has(c.id))
       .reduce((sum, c) => sum + c.points, 0) ?? 0
-
-  async function logout() {
-    "use server"
-    const { createClient } = await import("@/lib/supabase/server")
-    const supabase = await createClient()
-    await supabase.auth.signOut()
-    const { redirect } = await import("next/navigation")
-    redirect("/login")
-  }
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white">
@@ -180,12 +177,10 @@ export default async function Lab() {
                           {chapter.description}
                         </p>
                         <div className="flex items-center gap-3">
-                          <div className="flex-1 max-w-[160px] h-1 bg-[#1e1e2e] rounded-full overflow-hidden">
-                            <div
-                              className={`h-full rounded-full transition-all ${chapter.color.replace("text-", "bg-")}`}
-                              style={{ width: `${percentage}%` }}
-                            />
-                          </div>
+                          <ProgressBar
+                            value={percentage}
+                            color={chapter.hex}
+                          />
                           <span className={`text-xs font-mono font-bold ${chapter.color}`}>
                             {percentage}%
                           </span>

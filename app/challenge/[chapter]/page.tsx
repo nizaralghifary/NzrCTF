@@ -3,6 +3,7 @@ import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { logout } from "@/lib/actions/auth"
 import SubmitForm from "./submit-form"
+import ProgressBar from "@/components/progress-bar"
 import {
   User,
   Trophy,
@@ -21,6 +22,7 @@ const chapterConfig: Record<string, {
   title: string
   icon: React.ElementType
   color: string
+  hex: string
   border: string
   glow: string
 }> = {
@@ -29,6 +31,7 @@ const chapterConfig: Record<string, {
     title: "SQL Injection",
     icon: Database,
     color: "text-[#ff3c6e]",
+    hex: "#ff3c6e",
     border: "border-[#ff3c6e]/40",
     glow: "shadow-[0_0_12px_rgba(255,60,110,0.15)]",
   },
@@ -37,6 +40,7 @@ const chapterConfig: Record<string, {
     title: "Cross-Site Scripting",
     icon: Code2,
     color: "text-[#ffd700]",
+    hex: "#ffd700",
     border: "border-[#ffd700]/40",
     glow: "shadow-[0_0_12px_rgba(255,215,0,0.15)]",
   },
@@ -45,6 +49,7 @@ const chapterConfig: Record<string, {
     title: "Broken Access Control",
     icon: ShieldOff,
     color: "text-[#00bfff]",
+    hex: "#00bfff",
     border: "border-[#00bfff]/40",
     glow: "shadow-[0_0_12px_rgba(0,191,255,0.15)]",
   },
@@ -53,6 +58,7 @@ const chapterConfig: Record<string, {
     title: "SSRF / LFI / XXE",
     icon: Globe,
     color: "text-[#bf5fff]",
+    hex: "#bf5fff",
     border: "border-[#bf5fff]/40",
     glow: "shadow-[0_0_12px_rgba(191,95,255,0.15)]",
   },
@@ -162,12 +168,7 @@ export default async function ChapterPage({
               </span>
               <h1 className="text-2xl font-black mb-3">{config.title}</h1>
               <div className="flex items-center gap-3">
-                <div className="flex-1 max-w-[200px] h-1.5 bg-[#1e1e2e] rounded-full overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all ${config.color.replace("text-", "bg-")}`}
-                    style={{ width: `${percentage}%` }}
-                  />
-                </div>
+                <ProgressBar value={percentage} color={config.hex} />
                 <span className={`text-xs font-mono font-bold ${config.color}`}>
                   {percentage}%
                 </span>
