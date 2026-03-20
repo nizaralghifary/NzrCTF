@@ -2,7 +2,7 @@
 
 import { useActionState } from "react"
 import { submitFlag } from "@/lib/actions/challenge"
-import { Flag } from "lucide-react"
+import { Flag, X, Check } from "lucide-react"
 
 export default function SubmitForm({
   challengeId,
@@ -23,6 +23,7 @@ export default function SubmitForm({
           name="flag"
           placeholder="NzrCTF{...}"
           className="bg-[#0a0a0f] border border-[#1e1e2e] text-white font-mono text-xs px-3 py-1.5 rounded focus:outline-none focus:border-[#00ff88] focus:ring-1 focus:ring-[#00ff88]/20 transition-all placeholder:text-[#333350] w-40 sm:w-48"
+          required
         />
         <button
           type="submit"
@@ -34,8 +35,9 @@ export default function SubmitForm({
         </button>
       </form>
       {state && (
-        <p className={`text-xs font-mono ${state.success ? "text-[#00ff88]" : "text-[#ff3c6e]"}`}>
-          {state.success ? "✓" : "✗"} {state.message}
+        <p className={`flex items-center text-xs font-mono ${state.success ? "text-[#00ff88]" : "text-[#ff3c6e]"}`}>
+          {state.success ? <Check className="mr-1 h-4 w-4"/> : <X className="mr-1 h-4 w-4"/>} 
+          {state.message}
         </p>
       )}
     </div>

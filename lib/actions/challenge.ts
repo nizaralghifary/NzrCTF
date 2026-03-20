@@ -26,7 +26,7 @@ export async function submitFlag(prevState: State, formData: FormData): Promise<
 
   const { data: existing } = await supabase
     .from("submissions")
-    .select("is_correct")
+    .select("id, is_correct")
     .eq("user_id", user.id)
     .eq("challenge_id", challengeId)
     .single()
@@ -47,14 +47,24 @@ export async function submitFlag(prevState: State, formData: FormData): Promise<
 
   const isCorrect = flag.trim() === challenge.flag
 
-  await supabase.from("submissions").upsert({
-    user_id: user.id,
-    challenge_id: challengeId,
-    submitted_flag: flag.trim(),
-    is_correct: isCorrect,
-  }, {
-    onConflict: "user_id,challenge_id",
-  })
+  if (existing) {
+    await supabase
+      .from("submissions")
+      .update({
+        submitted_flag: flag.trim(),
+        is_correct: isCorrect,
+      })
+      .eq("id", existing.id)
+  } else {
+    await supabase
+      .from("submissions")
+      .insert({
+        user_id: user.id,
+        challenge_id: challengeId,
+        submitted_flag: flag.trim(),
+        is_correct: isCorrect,
+      })
+  }
 
   if (isCorrect) {
     revalidatePath(`/challenge/${chapterSlug}`)
