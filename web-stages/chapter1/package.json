@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "bash ./start-chapter1.sh"
+    "start": "bash ./start-chapter1.sh",
+    "ngrok": "bash ./start-ngrok.sh"
   },
   "keywords": [],
   "author": "",
